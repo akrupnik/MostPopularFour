@@ -10,12 +10,15 @@
 #import "FourImages.h"
 #import "NSMutableArray+Functions.h"
 
-@interface ShowFour : UIViewController
+@interface ShowFour : UIViewController {
+    BOOL _imagesShown;
+}
 @property(nonatomic,strong) NSMutableArray *imgIds;
 
 @property (weak, nonatomic) IBOutlet FourImages *fourImagesView;
 - (IBAction)refresh:(id)sender;
 -(void) showFourPicturesWithIndex:(int) index andData: (NSData *) data;
+-(void) clearFourImages;
 + (NSURLSession *)session;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 

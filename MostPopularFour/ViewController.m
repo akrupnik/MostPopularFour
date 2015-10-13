@@ -17,16 +17,6 @@
     [super viewDidLoad];
 }
 
--(void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if([segue.identifier isEqualToString:@"goFacebook"]) {
-       
-        [segue destinationViewController];
-    }
-    else if ([segue.identifier isEqualToString:@"goInstagram"]) {
-        
-        [segue destinationViewController];
-    }
-}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

@@ -41,7 +41,9 @@
 
 -(void) showFourPicturesWithIndex:(int) index andData: (NSData *) data {
     
-    [self.activityIndicator stopAnimating];
+    //[self.activityIndicator stopAnimating];
+    NSLog(@"index=%ul",index);
+    
     
     if(index == 0) {
         self.fourImagesView.imageView1.image = [UIImage imageWithData:data];
@@ -54,8 +56,20 @@
     }
     else {
         self.fourImagesView.imageView4.image = [UIImage imageWithData:data];
+        self.imgIds = nil;
+        _imagesShown = true;
+        [self.activityIndicator stopAnimating];
     }
+    
 }
+
+-(void) clearFourImages {
+    self.fourImagesView.imageView1.image = nil;
+    self.fourImagesView.imageView2.image = nil;
+    self.fourImagesView.imageView3.image = nil;
+    self.fourImagesView.imageView4.image = nil;
+}
+
 
 - (IBAction)refresh:(id)sender {
    //implement in a subclass

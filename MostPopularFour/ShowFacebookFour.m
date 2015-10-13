@@ -24,15 +24,27 @@ static NSString *const FACEBOOK_ACCESS_TOKEN = @"CAAXuWOPMyrcBAKd0LoNzPtcVYo737s
 }
 
 
-
 -(void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:true];
-     [self prepareForFacebook];
+    self.fourImagesView.imageView1.image = nil;
+    self.fourImagesView.imageView2.image = nil;
+    self.fourImagesView.imageView3.image = nil;
+    self.fourImagesView.imageView4.image = nil;
+    
+    /*
+    for (UIView *view in [self.fourImagesView subviews]) {
+        if([view isKindOfClass:[UIImageView class]] ) {
+           [view removeFromSuperview];
+        }
+    }
+     */
+    [self prepareForFacebook];
 }
 
 
 - (void) prepareForFacebook {
     self.imgIds = [[NSMutableArray alloc] init];
+    _imagesShown = false;
     [self retrieveFourPictures];
 }
 
@@ -57,46 +69,46 @@ static NSString *const FACEBOOK_ACCESS_TOKEN = @"CAAXuWOPMyrcBAKd0LoNzPtcVYo737s
             [albumIds addObject:[items[i] objectForKey:@"id"]];
         }
         self.albumIds = [albumIds shuffle];
-        //NSLog(@"albumIDs=%@",albumIds);
-        
-        
         //get image IDs
-        for(int i=0; i < 6; i++) {
-            NSLog(@"imgIDs");
-            NSString *query = [NSString stringWithFormat:@"https://graph.facebook.com/v2.1/%@/photos?access_token=%@",self.albumIds[i],FACEBOOK_ACCESS_TOKEN];
-            
-            
-            NSURLSessionDataTask *imageIDdataTask = [[[self class] session] dataTaskWithURL:[NSURL URLWithString:query] completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
-                
-                NSLog(@"error=%@",error);
-                NSError *jsonImgErr;
-                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonImgErr];
-                if(jsonImgErr) {
-                    NSLog(@"JSON img error = %@", error);
-                    return;
-                }
-                
-                NSArray *albumItems = [json objectForKey:@"data"];
-                
-                if([albumItems count]!= 0) {
-                   [self.imgIds addObject:[albumItems[0] objectForKey:@"id"]];
-                }
-                if ([self.imgIds count] == 4) {
-                    NSLog(@"show pictures");
-                    [self showFourFacebookPictures];
-                }
-                
-                
-            }];
-            [imageIDdataTask resume];
-            
-        }
+        NSOperationQueue  *imageQueue = [NSOperationQueue new];
+        [imageQueue addOperationWithBlock:^{
+            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+            __block BOOL foundFour = false;
+            for(int i=0; !foundFour && i < [self.albumIds count]; i++) {
+                NSLog(@"imgIDs, i= %ul foundFour=%i", i,foundFour);
+                NSString *query = [NSString stringWithFormat:@"https://graph.facebook.com/v2.1/%@/photos?access_token=%@",self.albumIds[i],FACEBOOK_ACCESS_TOKEN];
+                NSURLSessionDataTask *imageIDdataTask = [[[self class] session] dataTaskWithURL:[NSURL URLWithString:query] completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                    
+                    if (error) {
+                       NSLog(@"error=%@",error);
+                    }
+                    NSError *jsonImgErr;
+                    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonImgErr];
+                    if(jsonImgErr) {
+                        NSLog(@"JSON img error = %@", error);
+                        return;
+                    }
+                    
+                    NSArray *albumItems = [json objectForKey:@"data"];
+                    if([albumItems count] != 0) {
+                        NSMutableArray *albumItemsMutable = [albumItems mutableCopy];
+                        [albumItemsMutable shuffle];
+                        [self.imgIds addObject:[albumItemsMutable[0] objectForKey:@"id"]];
+                    }
+                    if ([self.imgIds count] == 4) {
+                        NSLog(@"show pictures");
+                        foundFour = true;
+                        [self showFourFacebookPictures];
+                    }
+                    dispatch_semaphore_signal(semaphore);
+                    
+                }];
+                [imageIDdataTask resume];
+                dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+            }
+        }];
     }];
-    
     [dataTask resume];
-    
-    
-    
 }
 
 
@@ -116,8 +128,12 @@ static NSString *const FACEBOOK_ACCESS_TOKEN = @"CAAXuWOPMyrcBAKd0LoNzPtcVYo737s
 
 
 - (IBAction)refresh:(id)sender {
-    [self prepareForFacebook];
     
+    if(_imagesShown) {
+       [self clearFourImages];
+        _imagesShown = false;
+       [self prepareForFacebook];
+    }
 }
 
 - (void)didReceiveMemoryWarning {

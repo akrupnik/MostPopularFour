@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>A09783D4-74BF-42F6-8494-7006CE16F329</string>
+	<key>IDESourceControlProjectName</key>
+	<string>MostPopularFour</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>1F74982FED2AAA1527DF870CE02D4090FAEFCFC3</key>
+		<string>https://github.com/akrupnik/MostPopularFour</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>MostPopularFour.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>1F74982FED2AAA1527DF870CE02D4090FAEFCFC3</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/akrupnik/MostPopularFour</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>1F74982FED2AAA1527DF870CE02D4090FAEFCFC3</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>1F74982FED2AAA1527DF870CE02D4090FAEFCFC3</string>
+			<key>IDESourceControlWCCName</key>
+			<string>MostPopularFour</string>
+		</dict>
+	</array>
+</dict>
+</plist>

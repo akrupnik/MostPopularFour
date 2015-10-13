@@ -76,6 +76,7 @@ static NSString *const  INSTAGRAM_QUERY = @"https://api.instagram.com/v1/media/p
 }
 
 - (IBAction)refresh:(id)sender {
+    [self clearFourImages];
     [self loadFourPictures];
 }
 
